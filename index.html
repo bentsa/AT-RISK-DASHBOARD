@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>SA Students at Risk — DHET Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+
+  <!-- MOBILE HAMBURGER -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#1a5fa5"/>
+              <stop offset="100%" style="stop-color:#c2382a"/>
+            </linearGradient>
+            <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#f0f4ff"/>
+              <stop offset="100%" style="stop-color:#d8e6ff"/>
+            </linearGradient>
+            <linearGradient id="certGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#fffbe6"/>
+              <stop offset="100%" style="stop-color:#ffe8b0"/>
+            </linearGradient>
+          </defs>
+          <rect width="38" height="38" rx="9" fill="url(#logoGrad)"/>
+          <!-- Graduation cap board -->
+          <polygon points="19,7 7,13 19,19 31,13" fill="url(#capGrad)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+          <!-- Cap top -->
+          <rect x="16.5" y="5.5" width="5" height="3" rx="1" fill="#e8f0ff" opacity="0.9"/>
+          <!-- Cap tassel string -->
+          <line x1="31" y1="13" x2="31" y2="19" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="31" cy="20" r="1.5" fill="#ffd700"/>
+          <!-- Graduation gown sides -->
+          <path d="M12,19 L10,27 L15,26 L15,21" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+          <path d="M26,19 L28,27 L23,26 L23,21" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+          <!-- Certificate scroll -->
+          <rect x="9" y="25" width="14" height="10" rx="1.5" fill="url(#certGrad)" stroke="rgba(255,200,50,0.4)" stroke-width="0.5"/>
+          <rect x="9" y="25" width="2" height="10" rx="1" fill="#e8c870" opacity="0.7"/>
+          <rect x="21" y="25" width="2" height="10" rx="1" fill="#e8c870" opacity="0.7"/>
+          <!-- Certificate lines -->
+          <line x1="12.5" y1="28.5" x2="20.5" y2="28.5" stroke="#b8961a" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="12.5" y1="31" x2="18" y2="31" stroke="#b8961a" stroke-width="0.6" stroke-linecap="round"/>
+          <!-- Certificate ribbon -->
+          <circle cx="24" cy="30" r="3" fill="#c2382a" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+          <circle cx="24" cy="30" r="1.8" fill="rgba(255,255,255,0.2)"/>
+          <line x1="24" y1="27" x2="24" y2="24" stroke="#c2382a" stroke-width="1.2"/>
+          <line x1="22.5" y1="24.5" x2="25.5" y2="24.5" stroke="#c2382a" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div>
+        <span class="logo-text">AtRisk<strong>SA</strong></span>
+        <div class="logo-sub">DHET Analytics Platform</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Risk Overview</span>
+      </button>
+      <button class="nav-item" data-tab="analysis">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M7 10v10M12 4v16M17 14v6"/><circle cx="7" cy="7" r="2"/><circle cx="12" cy="2" r="1.5"/><circle cx="17" cy="11" r="2"/></svg>
+        <span>Data Analysis</span>
+      </button>
+      <button class="nav-item" data-tab="institutions">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Institutions</span>
+      </button>
+      <button class="nav-item" data-tab="sentiment">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        <span>Insights</span>
+        <span class="nav-badge" style="background:rgba(99,153,34,0.2);color:#639922;border-color:rgba(99,153,34,0.3);">AI</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="data-source">
+        <div class="ds-label">Data Sources</div>
+        <div class="ds-value">DHET / HEMIS 2021–2024</div>
+        <div class="ds-value">CHE VitalStats 2021</div>
+        <div class="ds-value">HSRC Higher Education</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumb">Department of Higher Education and Training</div>
+        <h1 id="page-title">Risk Overview</h1>
+        <p id="page-subtitle">26 public universities · School quintile intake · DHET-aligned dropout &amp; retention data</p>
+      </div>
+      <div class="topbar-right">
+        <div class="last-updated">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Last updated: May 2024
+        </div>
+        <div class="badge-dhet">DHET</div>
+      </div>
+    </header>
+
+    <!-- PANELS -->
+    <div class="panels">
+
+      <!-- ==================== OVERVIEW PANEL ==================== -->
+      <section id="panel-overview" class="panel active">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="kpi-label">Total enrolled</div>
+            <div class="kpi-value">1.07M</div>
+            <div class="kpi-sub">Public universities 2023</div>
+          </div>
+          <div class="kpi-card kpi-danger">
+            <div class="kpi-icon kpi-icon--red">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="kpi-label">National dropout rate</div>
+            <div class="kpi-value">52%</div>
+            <div class="kpi-sub">DHET / HSRC estimate</div>
+          </div>
+          <div class="kpi-card kpi-warning">
+            <div class="kpi-icon kpi-icon--amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <div class="kpi-label">On-time graduation</div>
+            <div class="kpi-value">33%</div>
+            <div class="kpi-sub">Complete in minimum time</div>
+          </div>
+          <div class="kpi-card kpi-info">
+            <div class="kpi-icon kpi-icon--blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div class="kpi-label">Q1–Q3 student share</div>
+            <div class="kpi-value">68%</div>
+            <div class="kpi-sub">Historically disadvantaged</div>
+          </div>
+          <div class="kpi-card kpi-warning">
+            <div class="kpi-icon kpi-icon--amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="kpi-label">Critical-risk institutions</div>
+            <div class="kpi-value">6</div>
+            <div class="kpi-sub">Risk score ≥ 85</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="kpi-label">NSFAS-funded students</div>
+            <div class="kpi-value">~500K</div>
+            <div class="kpi-sub">National bursary scheme</div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card chart-card--lg">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">At-risk score by institution</div>
+                <div class="chart-sub">Composite index: dropout rate, NSFAS dependency, quintile intake</div>
+              </div>
+              <div class="chart-filter" id="type-filter">
+                <button class="chip active" data-type="all">All</button>
+                <button class="chip" data-type="Traditional">Traditional</button>
+                <button class="chip" data-type="Technology">Technology</button>
+                <button class="chip" data-type="Comprehensive">Comprehensive</button>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px;">
+              <canvas id="riskBarChart" role="img" aria-label="Horizontal bar chart showing at-risk scores per institution"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Risk level distribution</div>
+                <div class="chart-sub">Across all 26 public universities</div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Critical (≥85)</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>High (70–84)</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#888780"></span>Medium (50–69)</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Low (&lt;50)</span>
+            </div>
+            <div class="chart-wrap" style="height:220px;">
+              <canvas id="riskDonutChart" role="img" aria-label="Donut chart showing risk level distribution"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Dropout rate vs NSFAS dependency</div>
+                <div class="chart-sub">Bubble size reflects total enrolment</div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#185FA5"></span>Traditional</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Technology</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Comprehensive</span>
+            </div>
+            <div class="chart-wrap" style="height:260px;">
+              <canvas id="scatterChart" role="img" aria-label="Scatter plot of dropout rate vs NSFAS dependency"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Dropout rate by province</div>
+                <div class="chart-sub">Average across institutions per province</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:280px;">
+              <canvas id="provinceChart" role="img" aria-label="Bar chart showing average dropout rate by province"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== STATS PANEL (NEW) ==================== -->
+      <section id="panel-stats" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">National Enrolment, Funding &amp; Quintile Profile</div>
+            <div class="section-intro-body">Aggregated from DHET HEMIS 2023/24 records across all 26 public universities. NSFAS figures reflect approved beneficiaries. Quintile data derived from school of origin records.</div>
+          </div>
+        </div>
+
+        <!-- ENROLMENT CARDS -->
+        <div class="stats-section-label">Enrolment by institution type</div>
+        <div class="stats-grid" id="enrollmentGrid"></div>
+
+        <!-- NSFAS FUNDING -->
+        <div class="stats-section-label" style="margin-top:2rem;">NSFAS funding distribution</div>
+        <div class="stats-grid" id="nsfasGrid"></div>
+
+        <!-- QUINTILE BREAKDOWN -->
+        <div class="stats-section-label" style="margin-top:2rem;">School quintile intake — national aggregate</div>
+        <div class="quintile-breakdown" id="quintileBreakdown"></div>
+
+        <!-- INSTITUTION SPOTLIGHT -->
+        <div class="stats-section-label" style="margin-top:2rem;">Institution spotlight — enrolment &amp; NSFAS</div>
+        <div class="chart-card" style="padding:0;overflow:hidden;margin-top:0.75rem;">
+          <div class="table-wrap">
+            <table class="data-table" id="statsTable">
+              <thead>
+                <tr>
+                  <th>Institution</th>
+                  <th>Type</th>
+                  <th>Province</th>
+                  <th>Total enrolled</th>
+                  <th>NSFAS funded (est.)</th>
+                  <th>NSFAS %</th>
+                  <th>Q1 students (est.)</th>
+                  <th>Q1+Q2 %</th>
+                  <th>Risk level</th>
+                </tr>
+              </thead>
+              <tbody id="statsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== QUINTILE PANEL ==================== -->
+      <section id="panel-quintile" class="panel">
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">National quintile intake distribution</div>
+                <div class="chart-sub">Weighted by enrolment across all institutions</div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Q1 — Poorest 20%</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Q2</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#888780"></span>Q3 — Middle</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Q4</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Q5 — Affluent</span>
+            </div>
+            <div class="chart-wrap" style="height:260px;">
+              <canvas id="quintileDonut" role="img" aria-label="Donut chart of national quintile distribution"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Dropout rate by school quintile</div>
+                <div class="chart-sub">DHET-aligned rates by socioeconomic origin</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:260px;">
+              <canvas id="quintileDropoutBar" role="img" aria-label="Bar chart of dropout rates by school quintile"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Quintile intake per institution — top 15 by Q1+Q2 share</div>
+              <div class="chart-sub">Stacked percentage shows socioeconomic composition of each institution's student body</div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:360px;">
+            <canvas id="quintileStackBar" role="img" aria-label="Stacked bar chart of quintile intake per institution"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Quintile intake table — all institutions</div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="quintTable">
+              <thead>
+                <tr>
+                  <th>Institution</th>
+                  <th>Q1 (poorest)</th>
+                  <th>Q2</th>
+                  <th>Q3</th>
+                  <th>Q4</th>
+                  <th>Q5 (affluent)</th>
+                  <th>Dominant</th>
+                  <th>Intake profile</th>
+                </tr>
+              </thead>
+              <tbody id="quintTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== INSTITUTIONS PANEL ==================== -->
+      <section id="panel-institutions" class="panel">
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search institution, province…" />
+          </div>
+          <div class="chip-group" id="riskFilter">
+            <button class="chip active" data-risk="all">All risk levels</button>
+            <button class="chip chip--danger" data-risk="Critical">Critical</button>
+            <button class="chip chip--warning" data-risk="High">High</button>
+            <button class="chip chip--neutral" data-risk="Medium">Medium</button>
+            <button class="chip chip--success" data-risk="Low">Low</button>
+          </div>
+        </div>
+
+        <div class="chart-card" style="padding:0;overflow:hidden;">
+          <div class="table-wrap">
+            <table class="data-table" id="instTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-key="name">Institution <span class="sort-arrow">⇅</span></th>
+                  <th>Type</th>
+                  <th>Province</th>
+                  <th class="sortable" data-key="enrolled">Enrolled <span class="sort-arrow">⇅</span></th>
+                  <th class="sortable" data-key="dropout">Dropout % <span class="sort-arrow">⇅</span></th>
+                  <th class="sortable" data-key="nsfas">NSFAS % <span class="sort-arrow">⇅</span></th>
+                  <th>Dom. Quintile</th>
+                  <th class="sortable" data-key="risk">Risk score <span class="sort-arrow">⇅</span></th>
+                  <th>Risk level</th>
+                </tr>
+              </thead>
+              <tbody id="instTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== INTERVENTIONS PANEL ==================== -->
+      <section id="panel-interventions" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon" style="background:rgba(226,75,74,0.12);color:#E24B4A;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">DHET Intervention Framework</div>
+            <div class="section-intro-body">Recommended interventions derived from dominant school quintile, dropout rate, NSFAS dependency, and institutional risk profile — aligned to DHET support frameworks and CHE retention research (2023/24).</div>
+          </div>
+        </div>
+
+        <div id="interventionCards"></div>
+
+        <div class="charts-row" style="margin-top:1.5rem;">
+          <div class="chart-card chart-card--lg">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Intervention urgency matrix</div>
+                <div class="chart-sub">Q1+Q2 intake vs dropout rate · Bubble size = composite risk score</div>
+              </div>
+            </div>
+            <div class="legend-row">
+              <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Critical</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>High</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#888780"></span>Medium</span>
+            </div>
+            <div class="chart-wrap" style="height:320px;">
+              <canvas id="matrixChart" role="img" aria-label="Bubble chart showing intervention urgency across institutions"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Interventions needed by type</div>
+                <div class="chart-sub">Number of institutions requiring each intervention</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:280px;">
+              <canvas id="interventionTypeChart" role="img" aria-label="Horizontal bar chart of intervention types needed"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PROVINCE MAP PANEL ==================== -->
+      <section id="panel-provinces" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon" style="background:rgba(55,138,221,0.12);color:#378ADD;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="11" r="2"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">Province Risk Map — South Africa</div>
+            <div class="section-intro-body">Interactive SVG map showing all 9 provinces. Colour intensity reflects average institutional risk score. Click any province to see its institutions.</div>
+          </div>
+        </div>
+        <div class="province-map-layout">
+          <div class="chart-card province-map-card">
+            <div class="chart-header"><div><div class="chart-title">At-risk institutions by province</div><div class="chart-sub">Hover or click provinces to explore</div></div></div>
+            <div id="saMapContainer"></div>
+          </div>
+          <div class="chart-card province-detail-card">
+            <div class="chart-header"><div><div class="chart-title" id="provinceDetailTitle">Select a province</div><div class="chart-sub" id="provinceDetailSub">Click on a province to see institutions</div></div></div>
+            <div id="provinceDetailContent">
+              <div class="analysis-placeholder" style="min-height:180px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--color-text-3);"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="11" r="2"/></svg>
+                <p>Click a province on the map to see its institutions and risk data.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card" style="margin-top:1rem;">
+          <div class="chart-header"><div><div class="chart-title">Province risk ranking</div><div class="chart-sub">Sorted by average composite risk score</div></div></div>
+          <div id="provinceRankingTable"></div>
+        </div>
+      </section>
+
+      <!-- ==================== ANALYSIS PANEL ==================== -->
+      <section id="panel-analysis" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon" style="background:rgba(99,153,34,0.12);color:#639922;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M7 10v10M12 4v16M17 14v6"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">Python-Powered Data Analysis Engine</div>
+            <div class="section-intro-body">Select an analysis module below, configure parameters, and run instant statistical analysis on the DHET HEMIS 2023/24 dataset. Results are generated using Python-equivalent logic and presented as structured tables, summaries, and visualisations.</div>
+          </div>
+        </div>
+
+        <!-- Analysis selector -->
+        <div class="analysis-selector-wrap">
+          <label class="field-label">Select analysis module</label>
+          <div class="analysis-dropdown-row">
+            <div class="analysis-select-wrap">
+              <svg class="analysis-select-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              <select id="analysisSelect" class="analysis-select">
+                <option value="">— Choose an analysis —</option>
+                <optgroup label="Descriptive Statistics">
+                  <option value="describe">Descriptive Statistics Summary (df.describe())</option>
+                  <option value="correlations">Correlation Matrix — Risk Factors</option>
+                  <option value="distribution">Distribution Analysis — Dropout Rates</option>
+                </optgroup>
+                <optgroup label="Institutional Analysis">
+                  <option value="top_risk">Top-N Highest Risk Institutions</option>
+                  <option value="by_type">Breakdown by Institution Type</option>
+                  <option value="by_province">Provincial Aggregation & Ranking</option>
+                  <option value="outliers">Outlier Detection — Anomalous Institutions</option>
+                </optgroup>
+                <optgroup label="Equity & Quintile">
+                  <option value="quintile_dropout">Quintile × Dropout Regression</option>
+                  <option value="nsfas_analysis">NSFAS Dependency vs Dropout Correlation</option>
+                  <option value="equity_index">Equity Index Calculation</option>
+                </optgroup>
+                <optgroup label="Predictive & Rankings">
+                  <option value="risk_model">Composite Risk Model Weights</option>
+                  <option value="graduation_gap">Graduation Gap Analysis</option>
+                  <option value="cohort_sim">Cohort Survival Simulation</option>
+                </optgroup>
+              </select>
+              <svg class="analysis-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <button class="btn-primary" id="runAnalysisBtn" disabled>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run Analysis
+            </button>
+            <button class="btn-secondary" id="downloadAnalysisBtn" style="display:none;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+
+          <div id="backendStatus" class="backend-status" style="margin-top:8px;"></div>
+
+          <!-- Analysis description -->
+          <div id="analysisDesc" class="analysis-desc" style="display:none;"></div>
+        </div>
+
+        <!-- Analysis output area -->
+        <div id="analysisOutput" class="analysis-output">
+          <div class="analysis-placeholder">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" style="color:var(--color-text-3);"><path d="M2 20h20M7 10v10M12 4v16M17 14v6"/><circle cx="7" cy="7" r="2"/><circle cx="12" cy="2" r="1.5"/><circle cx="17" cy="11" r="2"/></svg>
+            <div class="analysis-placeholder-title">No analysis selected</div>
+            <p>Choose an analysis module from the dropdown above and click <strong>Run Analysis</strong> to generate statistical results from the DHET HEMIS dataset.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== REPORT PANEL (NEW) ==================== -->
+      <section id="panel-report" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon" style="background:rgba(55,138,221,0.12);color:#378ADD;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">AI-Assisted Report Generator</div>
+            <div class="section-intro-body">Generate structured policy reports and briefings using the dashboard data. Customise your prompt below, then download the generated report as a formatted document. Powered by Claude (Anthropic).</div>
+          </div>
+        </div>
+
+        <div class="report-layout">
+          <!-- LEFT: Prompt & controls -->
+          <div class="report-left">
+            <div class="chart-card">
+              <div class="chart-title" style="margin-bottom:1rem;">Report configuration</div>
+
+              <label class="field-label">Report type</label>
+              <div class="report-type-grid" id="reportTypeGrid">
+                <button class="report-type-btn active" data-prompt="Generate a comprehensive executive summary for the Minister of Higher Education covering: the national student dropout crisis, which institutions are at critical risk, the socioeconomic (quintile) profile of students most at risk, NSFAS funding gaps, and the top 3 recommended interventions. Write in formal government report style with clear headings. Use the following data:">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Executive Summary
+                </button>
+                <button class="report-type-btn" data-prompt="Write a detailed risk assessment briefing for DHET senior officials. Include: a ranked list of the 10 highest-risk institutions with specific data points, the correlation between NSFAS dependency and dropout rates, quintile intake patterns at critical-risk institutions, provincial disparities, and immediate action recommendations. Use formal language with numbered sections:">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+                  Risk Assessment
+                </button>
+                <button class="report-type-btn" data-prompt="Produce an intervention plan document for DHET programme directors. For each risk level (Critical, High, Medium, Low), list specific institutions, their key vulnerabilities (dropout rate, NSFAS %, dominant quintile), and concrete intervention actions with implementation timelines. Include budget priority recommendations:">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Intervention Plan
+                </button>
+                <button class="report-type-btn" data-prompt="Write a socioeconomic equity analysis for the Higher Education Equity Research Unit. Analyse: how school quintile of origin predicts dropout rates, which institutions serve the most historically disadvantaged students, the relationship between NSFAS funding and retention, and recommendations for equity-focused resource allocation:">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  Equity Analysis
+                </button>
+              </div>
+
+              <label class="field-label" style="margin-top:1.25rem;">Custom prompt <span style="color:var(--color-text-3);font-weight:400;">(optional — edit or replace)</span></label>
+              <textarea id="reportPrompt" class="report-textarea" rows="6" placeholder="Describe what you want the report to cover..."></textarea>
+
+              <label class="field-label" style="margin-top:1rem;">Scope filter</label>
+              <div class="chip-group" id="reportScopeFilter" style="gap:6px;flex-wrap:wrap;">
+                <button class="chip active" data-scope="all">All institutions</button>
+                <button class="chip chip--danger" data-scope="Critical">Critical only</button>
+                <button class="chip chip--warning" data-scope="High">High risk</button>
+                <button class="chip" data-scope="Technology">Technology</button>
+                <button class="chip" data-scope="Traditional">Traditional</button>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-top:1.25rem;flex-wrap:wrap;">
+                <button class="btn-primary" id="generateReportBtn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  Generate Report
+                </button>
+                <button class="btn-secondary" id="downloadReportBtn" style="display:none;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download Report
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Report preview -->
+          <div class="report-right">
+            <div class="chart-card report-preview-card">
+              <div class="report-preview-header">
+                <div class="chart-title">Report preview</div>
+                <div id="reportStatus" class="report-status"></div>
+              </div>
+              <div id="reportOutput" class="report-output">
+                <div class="report-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--color-text-3);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <p>Select a report type and click <strong>Generate Report</strong> to produce an AI-written policy document based on the dashboard data.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SENTIMENT PANEL ==================== -->
+      <section id="panel-sentiment" class="panel">
+        <div class="section-intro">
+          <div class="section-intro-icon" style="background:rgba(99,153,34,0.12);color:#639922;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </div>
+          <div>
+            <div class="section-intro-title">Student Sentiment Insights</div>
+            <div class="section-intro-body">AI-powered sentiment analysis of student feedback across all 26 public universities. NLP scoring detects Positive, Neutral, and Negative themes — surfacing actionable patterns for institutional improvement.</div>
+          </div>
+        </div>
+        <div class="kpi-grid" id="sentimentKpiGrid"></div>
+        <div class="stats-section-label" style="margin-top:1.5rem;">AI-Generated Insight Narratives</div>
+        <div id="insightNarratives" class="insight-narrative-grid"></div>
+        <div class="charts-row" style="margin-top:1.5rem;">
+          <div class="chart-card chart-card--lg">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Sentiment Distribution by Institution</div>
+                <div class="chart-sub">Positive / Neutral / Negative sentiment scores per university</div>
+              </div>
+              <div class="chip-group" id="sentimentInstFilter">
+                <button class="chip active" data-sent="all">All</button>
+                <button class="chip" data-sent="Traditional">Traditional</button>
+                <button class="chip" data-sent="Technology">Technology</button>
+                <button class="chip" data-sent="Comprehensive">Comprehensive</button>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px;"><canvas id="sentimentBarChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><div><div class="chart-title">Overall Sentiment Split</div><div class="chart-sub">National aggregate across all feedback</div></div></div>
+            <div class="chart-wrap" style="height:220px;"><canvas id="sentimentDonutChart"></canvas></div>
+          </div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header"><div><div class="chart-title">Sentiment Trend (2021–2024)</div><div class="chart-sub">Quarterly rolling average sentiment scores</div></div></div>
+            <div class="chart-wrap" style="height:240px;"><canvas id="sentimentTrendChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><div><div class="chart-title">Most Common Concerns</div><div class="chart-sub">Negative-sentiment theme frequency</div></div></div>
+            <div class="chart-wrap" style="height:240px;"><canvas id="concernsChart"></canvas></div>
+          </div>
+        </div>
+        <div class="chart-card" style="margin-top:0.5rem;">
+          <div class="chart-title" style="margin-bottom:1rem;">Live Feedback Sentiment Analyser</div>
+          <div class="sentiment-input-row">
+            <input type="text" id="sentimentInput" class="search-input" style="flex:1;max-width:520px;" placeholder="Type student feedback, e.g. 'The lecturers are very supportive…'" />
+            <button class="btn-primary" id="sentimentAnalyseBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Analyse
+            </button>
+          </div>
+          <div id="sentimentLiveResult" style="margin-top:1rem;"></div>
+          <div class="stats-section-label" style="margin-top:1.25rem;">Analysed Student Feedback Samples</div>
+          <div id="feedbackSampleCards" class="feedback-sample-grid"></div>
+        </div>
+        <div class="chart-card" style="margin-top:0;">
+          <div class="chart-header"><div><div class="chart-title">Sentiment vs Dropout Risk</div><div class="chart-sub">Negative sentiment score vs institutional risk — bubble size = enrolment</div></div></div>
+          <div class="chart-wrap" style="height:280px;"><canvas id="sentimentRiskScatter"></canvas></div>
+        </div>
+      </section>
+
+    </div><!-- /panels -->
+  </main>
+
+  <!-- PROVINCE MAP PANEL (injected via JS) -->
+
+  <script src="js/data.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
